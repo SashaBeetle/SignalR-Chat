@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRChat-backend.API", "SignalRChat-backend.API\SignalRChat-backend.API.csproj", "{85E79197-3808-4D19-8462-961BA534DB8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRChat-backend.Data", "SignalRChat-backend.Data\SignalRChat-backend.Data.csproj", "{ED3C9AF0-30B0-4903-8A1B-271835F8D039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRChat-backend.Services", "SignalRChat-backend.Services\SignalRChat-backend.Services.csproj", "{992C3431-1BE3-4E82-9DE2-F89205EEC13D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRChat-backend.Tests", "SignalRChat-backend.Tests\SignalRChat-backend.Tests.csproj", "{9CD83903-E9B8-4C77-8A35-950579216127}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85E79197-3808-4D19-8462-961BA534DB8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85E79197-3808-4D19-8462-961BA534DB8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85E79197-3808-4D19-8462-961BA534DB8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85E79197-3808-4D19-8462-961BA534DB8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED3C9AF0-30B0-4903-8A1B-271835F8D039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED3C9AF0-30B0-4903-8A1B-271835F8D039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED3C9AF0-30B0-4903-8A1B-271835F8D039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED3C9AF0-30B0-4903-8A1B-271835F8D039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992C3431-1BE3-4E82-9DE2-F89205EEC13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992C3431-1BE3-4E82-9DE2-F89205EEC13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992C3431-1BE3-4E82-9DE2-F89205EEC13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992C3431-1BE3-4E82-9DE2-F89205EEC13D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD83903-E9B8-4C77-8A35-950579216127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD83903-E9B8-4C77-8A35-950579216127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD83903-E9B8-4C77-8A35-950579216127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD83903-E9B8-4C77-8A35-950579216127}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {54EB108D-3FBB-4CDD-8500-5707A7749237}
+	EndGlobalSection
+EndGlobal
