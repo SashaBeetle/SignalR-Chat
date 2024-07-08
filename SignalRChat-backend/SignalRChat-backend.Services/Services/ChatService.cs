@@ -1,35 +1,49 @@
-﻿using SignalRChat_backend.Data;
+﻿using Microsoft.EntityFrameworkCore;
 using SignalRChat_backend.Data.Entities;
+using SignalRChat_backend.Data.Interfaces;
 using SignalRChat_backend.Services.Interfaces;
 
 namespace SignalRChat_backend.Services.Services
 {
     public class ChatService : IChatService
     {
-        private readonly SignalRChatDbContext _dbContext;
+        private readonly IDbEntityService<Chat> _chatService;
 
-        public ChatService(SignalRChatDbContext dbContext)
+        public ChatService(IDbEntityService<Chat> chatService)
         {
-            _dbContext = dbContext;
+            _chatService = chatService;
         }
-        public Task<Chat> CreateChatAsync(string name, int userId)
+        public async Task<Chat> CreateChatAsync(string name, int userId)
         {
-            throw new NotImplementedException();
-        }
+            Chat chat = new Chat
+            {
+                Name = name,
+            };
 
-        public Task DeleteChatAsync(int chatId, int userId)
-        {
-            throw new NotImplementedException();
-        }
+            await _chatService.Create(chat);
 
-        public Task<IEnumerable<Chat>> GetAllChatsAsync()
-        {
-            throw new NotImplementedException();
+            return chat;
         }
 
-        public Task<Chat> GetChatByIdAsync(int chatId)
+        public async Task DeleteChatAsync(int chatId)
         {
-            throw new NotImplementedException();
+            Chat chat = await _chatService.GetById(chatId) ?? throw new Exception($"Chat with Id: {chatId} not found");
+
+            await _chatService.Delete(chat);
+        }
+
+        public async Task<IEnumerable<Chat>> GetAllChatsAsync()
+        {
+            IList<Chat> chats = await _chatService.GetAll().ToListAsync();
+
+            return chats;
+        }
+
+        public async Task<Chat> GetChatByIdAsync(int chatId)
+        {
+            Chat chat = await _chatService.GetById(chatId) ?? throw new Exception($"Chat with Id: {chatId} not found");
+
+            return chat;
         }
     }
 }

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SignalRChat-backend.Data\SignalRChat-backend.Data.csproj" />
+    <ProjectReference Include="..\SignalRChat-backend.Services\SignalRChat-backend.Services.csproj" />
   </ItemGroup>
 
 </Project>

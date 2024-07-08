@@ -11,7 +11,7 @@ namespace SignalRChat_backend.Data
         private static void RegisterDatabaseDependencies(this IServiceCollection services, IConfigurationRoot configuration)
         {
             services.AddDbContext<SignalRChatDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("TodoDatabase")));
+                options.UseNpgsql(configuration.GetConnectionString("SignalRChatDatabase")));
         }
         private static void RegisterServiceDependencies(this IServiceCollection services)
         {

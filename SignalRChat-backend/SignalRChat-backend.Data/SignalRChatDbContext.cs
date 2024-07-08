@@ -14,11 +14,6 @@ namespace SignalRChat_backend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-            .HasMany(u => u.Chats)
-            .WithOne(c => c.User)
-            .HasForeignKey(c => c.UserId);
-
             modelBuilder.Entity<Chat>()
                 .HasMany(c => c.Messages)
                 .WithOne(m => m.Chat)
