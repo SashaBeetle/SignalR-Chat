@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SignalRChat-backend.Data\SignalRChat-backend.Data.csproj" />
+  </ItemGroup>
+
 </Project>
