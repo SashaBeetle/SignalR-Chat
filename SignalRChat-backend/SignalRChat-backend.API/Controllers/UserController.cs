@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SignalRChat_backend.Data.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SignalRChat_backend.API.Mapping.DTOs;
 using SignalRChat_backend.Services.Interfaces;
-using SignalRChat_backend.Services.Services;
+
 
 namespace SignalRChat_backend.API.Controllers
 {
@@ -10,33 +11,44 @@ namespace SignalRChat_backend.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IMapper _mapper;
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            return await _userService.GetAllUsersAsync();
+            return Ok(_mapper.Map<IEnumerable<UserDTO>>(await _userService.GetAllUsersAsync()));
         }
 
         [HttpGet("{id}")]
-        public async Task<User> GetUser(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
-            return await _userService.GetUserByIdAsync(id);
+            return Ok(_mapper.Map<UserDTO>(await _userService.GetUserByIdAsync(id)));
         }
 
         [HttpPost]
-        public async Task<User> CreateChat([FromBody] string name)
+        public async Task<IActionResult> CreateUser([FromBody] string name)
         {
-            return await _userService.CreateUserAsync(name);
+            return Ok(_mapper.Map<UserDTO>(await _userService.CreateUserAsync(name)));
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteChat(int id)
+        public async Task<IActionResult> DeleteChat(int id)
         {
             await _userService.DeleteUserByIdAsync(id);
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("testing")]
+        public async Task<IActionResult> CheckUser(int userId, int chatId)
+        {
+            await _userService.CheckChatForUser(userId, chatId);
+            return NoContent();
         }
     }
 }

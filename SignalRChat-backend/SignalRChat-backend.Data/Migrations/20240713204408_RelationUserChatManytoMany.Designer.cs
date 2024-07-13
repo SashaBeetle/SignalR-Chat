@@ -11,8 +11,8 @@ using SignalRChat_backend.Data;
 namespace SignalRChat_backend.Data.Migrations
 {
     [DbContext(typeof(SignalRChatDbContext))]
-    [Migration("20240708195510_addNewEntities")]
-    partial class addNewEntities
+    [Migration("20240713204408_RelationUserChatManytoMany")]
+    partial class RelationUserChatManytoMany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace SignalRChat_backend.Data.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -85,6 +88,21 @@ namespace SignalRChat_backend.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("SignalRChat_backend.Data.Entities.UserChat", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "ChatId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("UsersChats");
+                });
+
             modelBuilder.Entity("SignalRChat_backend.Data.Entities.Message", b =>
                 {
                     b.HasOne("SignalRChat_backend.Data.Entities.Chat", "Chat")
@@ -104,9 +122,35 @@ namespace SignalRChat_backend.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SignalRChat_backend.Data.Entities.UserChat", b =>
+                {
+                    b.HasOne("SignalRChat_backend.Data.Entities.Chat", "Chat")
+                        .WithMany("UserChats")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalRChat_backend.Data.Entities.User", "User")
+                        .WithMany("UserChats")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SignalRChat_backend.Data.Entities.Chat", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("UserChats");
+                });
+
+            modelBuilder.Entity("SignalRChat_backend.Data.Entities.User", b =>
+                {
+                    b.Navigation("UserChats");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,48 +1,51 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using SignalRChat_backend.Data;
-using SignalRChat_backend.Data.Entities;
+using SignalRChat_backend.Services.Interfaces;
 
 namespace SignalRChat_backend.API.Hubs
 {
-    public class ChatHub : Hub
+    public class ChatHub : Hub // Добавити обробку виключень!
     {
-        private readonly SignalRChatDbContext _context;
+        private readonly IChatService _chatService;
+        private readonly ILogger<ChatHub> _logger;
 
-        public ChatHub(SignalRChatDbContext context)
+        public ChatHub(IChatService chatService, ILogger<ChatHub> logger)
         {
-            _context = context;
+            _chatService = chatService;
+            _logger = logger;
         }
 
-        public async Task SendMessage(int chatId, int userId, string message)
+        public override async Task OnConnectedAsync()
         {
-            var chat = await _context.Chats.Include(c => c.Messages).FirstOrDefaultAsync(c => c.Id == chatId);
-            if (chat == null) return;
+            _logger.LogInformation("Client connected: " + Context.ConnectionId);
 
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null) return;
-
-            var newMessage = new Message
-            {
-                ChatId = chatId,
-                UserId = userId,
-                Text = message,
-            };
-
-            _context.Messages.Add(newMessage);
-            await _context.SaveChangesAsync();
-
-            await Clients.Group(chatId.ToString()).SendAsync("ReceiveMessage", user.Name, message);
-
+            await Clients.All.SendAsync(Context.ConnectionId + " Has already connected");
+            await base.OnConnectedAsync();
         }
-        public async Task JoinChat(int chatId)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
+            _logger.LogInformation("Client disconnected: " + Context.ConnectionId);
+
+            await Clients.All.SendAsync(Context.ConnectionId + " Has already disconnected");
+            await base.OnDisconnectedAsync(exception);
+        }
+        public async Task JoinChat(int chatId, int userId)
+        {
+            _logger.LogInformation("Client joined: " + Context.ConnectionId);
+
             await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
+            await _chatService.AddUserToChatAsync(chatId, userId);
+            await Clients.Group(chatId.ToString()).SendAsync("Client Joined:", Context.ConnectionId, chatId);
         }
-
-        public async Task LeaveChat(int chatId)
+        public async Task LeaveChat(int chatId, int userId)
         {
+            _logger.LogInformation("Client leaved: " + Context.ConnectionId);
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatId.ToString());
+            await _chatService.RemoveUserFromChatAsync(chatId, userId);
+            await Clients.Group(chatId.ToString()).SendAsync("ChatLeaved:", Context.ConnectionId, chatId);
         }
+        public async Task SendMessage(string message, int chatId)
+            => await Clients.Group(chatId.ToString()).SendAsync("ReceiveMessage", message);
     }
 }

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SignalRChat_backend.Data.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SignalRChat_backend.API.Mapping.DTOs;
 using SignalRChat_backend.Services.Interfaces;
 
 namespace SignalRChat_backend.API.Controllers
@@ -9,34 +10,37 @@ namespace SignalRChat_backend.API.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IMessageService _messageService;
+        private readonly IMapper _mapper;
 
-        public MessageController(IMessageService messageService)
+        public MessageController(IMessageService messageService, IMapper mapper)
         {
             _messageService = messageService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Message>> GetMessages()
+        public async Task<IActionResult> GetMessages()
         {
-            return await _messageService.GetAllMessagesAsync();
+            return Ok(_mapper.Map<IEnumerable<MessageDTO>>(await _messageService.GetAllMessagesAsync()));
         }
 
         [HttpGet("{id}")]
-        public async Task<Message> GetMessage(int id)
+        public async Task<IActionResult> GetMessage(int id)
         {
-            return await _messageService.GetMessageByIdAsync(id);
+            return Ok(_mapper.Map<MessageDTO>(await _messageService.GetMessageByIdAsync(id)));
         }
 
         [HttpPost]
-        public async Task<Message> CreateMessage([FromBody] string text, int userId, int chatId)
+        public async Task<IActionResult> CreateMessage([FromBody] string text, int userId, int chatId)
         {
-            return await _messageService.CreateMessageAsync(text, userId, chatId);
+            return Ok(_mapper.Map<MessageDTO>(await _messageService.CreateMessageAsync(text, userId, chatId)));
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteMessage(int id)
+        public async Task<IActionResult> DeleteMessage(int id)
         {
             await _messageService.DeleteMessageByIdAsync(id);
+            return NoContent();
         }
     }
 }

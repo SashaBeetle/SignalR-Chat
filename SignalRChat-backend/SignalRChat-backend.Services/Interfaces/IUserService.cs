@@ -13,5 +13,6 @@ namespace SignalRChat_backend.Services.Interfaces
         Task<User> GetUserByIdAsync(int userId);
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task DeleteUserByIdAsync(int userId);
+        Task CheckChatForUser(int userId, int chatId);
     }
 }
