@@ -23,14 +23,25 @@ namespace SignalRChat_backend.Data.Services
         }
         public async Task AddUserToChatAsync(int chatId, int userId, string connectionId)
         {
-            UserChat userChat = new UserChat()
+            UserChat userChat = await _dbContext.UsersChats.FirstOrDefaultAsync(f => f.UserId == userId && f.ChatId == chatId);
+            
+            if (userChat is null)
             {
-                ChatId = chatId,
-                UserId = userId,
-                ConnectionId = connectionId
-            };
+                UserChat newUserChat = new UserChat()
+                {
+                    ChatId = chatId,
+                    UserId = userId,
+                    ConnectionId = connectionId
+                };
 
-            _dbContext.UsersChats.Add(userChat);
+                _dbContext.UsersChats.Add(newUserChat);
+            }
+            else
+            {
+                userChat.ConnectionId = connectionId;
+                _dbContext.UsersChats.Update(userChat);
+            }
+
             await _dbContext.SaveChangesAsync();
         }
         public async Task RemoveUserFromChatAsync(int chatId, int userId, string connectionId)

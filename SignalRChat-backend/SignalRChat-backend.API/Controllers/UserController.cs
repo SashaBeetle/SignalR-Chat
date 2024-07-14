@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SignalRChat_backend.API.Mapping.DTOs;
 using SignalRChat_backend.Services.Interfaces;
+using SignalRChat_backend.Services.Services;
 
 
 namespace SignalRChat_backend.API.Controllers
@@ -21,7 +22,17 @@ namespace SignalRChat_backend.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(_mapper.Map<IEnumerable<UserDTO>>(await _userService.GetAllUsersAsync()));
+            try
+            {
+                return Ok(_mapper.Map<IEnumerable<UserDTO>>(await _userService.GetAllUsersAsync()));
+            }
+            catch (ServiceException) {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
         [HttpGet("{id}")]
@@ -31,15 +42,31 @@ namespace SignalRChat_backend.API.Controllers
             {
                 return Ok(_mapper.Map<UserDTO>(await _userService.GetUserByIdAsync(id)));
             }
-            catch (Exception ex) {
+            catch (ServiceException)
+            {
                 return NotFound();
+            }
+            catch (Exception ex) {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] string name)
         {
-            return Ok(_mapper.Map<UserDTO>(await _userService.CreateUserAsync(name)));
+            try
+            {
+                return Ok(_mapper.Map<UserDTO>(await _userService.CreateUserAsync(name)));
+
+            }
+            catch (ServiceException ex)
+            {
+                return BadRequest(ex);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -50,9 +77,13 @@ namespace SignalRChat_backend.API.Controllers
                 await _userService.DeleteUserByIdAsync(id);
                 return NoContent();
             }
+            catch (ServiceException)
+            {
+                return NotFound();
+            }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

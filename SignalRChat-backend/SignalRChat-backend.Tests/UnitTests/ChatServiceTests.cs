@@ -46,7 +46,7 @@ namespace SignalRChat_backend.Tests.UnitTests
             _mockChatService.Setup(cs => cs.GetById(chatId)).ReturnsAsync(chat);
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<UserException>(async () => await _chatService.DeleteChatByIdAsync(chatId, userId));
+            var ex = Assert.ThrowsAsync<ServiceException>(async () => await _chatService.DeleteChatByIdAsync(chatId, userId));
             Assert.AreEqual("There are no permissions to do the operation", ex.Message);
         }
 

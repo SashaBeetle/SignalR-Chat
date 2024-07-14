@@ -2,13 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
 using SignalRChat_backend.API.Mapping.DTOs;
 using System.Net;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using SignalRChat_backend.Data;
 
 namespace SignalRChat_backend.Tests.IntegrationTests

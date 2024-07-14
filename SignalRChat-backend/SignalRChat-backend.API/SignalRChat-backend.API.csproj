@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>SignalRChat_backend.API</RootNamespace>
+    <UserSecretsId>3cafe760-90cc-4156-bb6a-26328145a57d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
