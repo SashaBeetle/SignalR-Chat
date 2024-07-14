@@ -25,9 +25,15 @@ namespace SignalRChat_backend.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            return Ok(_mapper.Map<UserDTO>(await _userService.GetUserByIdAsync(id)));
+            try
+            {
+                return Ok(_mapper.Map<UserDTO>(await _userService.GetUserByIdAsync(id)));
+            }
+            catch (Exception ex) {
+                return NotFound();
+            }
         }
 
         [HttpPost]
@@ -39,8 +45,15 @@ namespace SignalRChat_backend.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChat(int id)
         {
-            await _userService.DeleteUserByIdAsync(id);
-            return NoContent();
+            try
+            {
+                await _userService.DeleteUserByIdAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

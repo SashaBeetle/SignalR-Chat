@@ -1,6 +1,4 @@
-﻿using SignalRChat_backend.Data.Entities;
-
-namespace SignalRChat_backend.API.Mapping.DTOs
+﻿namespace SignalRChat_backend.API.Mapping.DTOs
 {
     public class UserDTO
     {

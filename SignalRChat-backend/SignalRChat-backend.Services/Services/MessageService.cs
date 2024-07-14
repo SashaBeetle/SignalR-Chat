@@ -44,7 +44,7 @@ namespace SignalRChat_backend.Services.Services
 
         public async Task<Message> GetMessageByIdAsync(int messageId)
         {
-            Message message = await _messageService.GetById(messageId);
+            Message message = await _messageService.GetById(messageId) ?? throw new Exception($"Message with Id: {messageId} not found");
 
             return message;
         }

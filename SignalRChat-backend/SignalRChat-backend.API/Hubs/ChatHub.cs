@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using SignalRChat_backend.Data;
 using SignalRChat_backend.Services.Interfaces;
 
 namespace SignalRChat_backend.API.Hubs

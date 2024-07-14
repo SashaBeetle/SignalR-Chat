@@ -37,21 +37,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.Use(async (context, next) =>
-{
-    try
-    {
-        Console.WriteLine($"Запит: {context.Request.Method} {context.Request.Path}");
-        await next.Invoke();
-        Console.WriteLine($"Відповідь: {context.Response.StatusCode}");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Виняток: {ex.Message}");
-        throw;
-    }
-});
-
 app.UseRouting();
 
 app.UseCors("CorsPolicy");
@@ -70,3 +55,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
+
+public partial class Program { }

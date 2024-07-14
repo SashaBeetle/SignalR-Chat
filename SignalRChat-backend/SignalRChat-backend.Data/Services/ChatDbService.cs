@@ -36,7 +36,8 @@ namespace SignalRChat_backend.Data.Services
         public async Task RemoveUserFromChatAsync(int chatId, int userId, string connectionId)
         {
             UserChat userChat = await _dbContext.UsersChats
-                                    .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ChatId == chatId);
+                                    .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ChatId == chatId && uc.ConnectionId == connectionId)
+                                    ?? throw new Exception("Not found such connections");
 
             _dbContext.UsersChats.Remove(userChat);
             await _dbContext.SaveChangesAsync();
@@ -45,9 +46,10 @@ namespace SignalRChat_backend.Data.Services
         {
             IEnumerable<UserChat> Chats = await _dbContext.UsersChats
                 .Where(w => w.ChatId == chatId)
-                .ToListAsync();
+                .ToListAsync()
+                ?? throw new Exception("Not found such connections");
 
-            foreach (UserChat chat in Chats) {
+            foreach (UserChat chat in Chats){
                 _dbContext.UsersChats.Remove(chat);
             }
             await _dbContext.SaveChangesAsync();
