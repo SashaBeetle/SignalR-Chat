@@ -42,13 +42,5 @@ namespace SignalRChat_backend.API.Controllers
             await _userService.DeleteUserByIdAsync(id);
             return NoContent();
         }
-
-        [HttpPost]
-        [Route("testing")]
-        public async Task<IActionResult> CheckUser(int userId, int chatId)
-        {
-            await _userService.CheckChatForUser(userId, chatId);
-            return NoContent();
-        }
     }
 }

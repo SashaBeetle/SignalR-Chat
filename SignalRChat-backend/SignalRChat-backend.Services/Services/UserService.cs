@@ -8,12 +8,12 @@ namespace SignalRChat_backend.Services.Services
     public class UserService : IUserService
     {
         private readonly IDbEntityService<User> _userService;
-        private readonly IUserCheckChat _userCheckChat;
+        private readonly IUserDbService _userDbService;
 
-        public UserService(IDbEntityService<User> userService, IUserCheckChat userCheckChat)
+        public UserService(IDbEntityService<User> userService, IUserDbService userDbService)
         {
             _userService = userService;
-            _userCheckChat = userCheckChat;
+            _userDbService = userDbService;
         }
         public async Task<User> CreateUserAsync(string name)
         {
@@ -43,14 +43,9 @@ namespace SignalRChat_backend.Services.Services
 
         public async Task<User> GetUserByIdAsync(int userId)
         {
-            User user = await _userService.GetById(userId) ?? throw new Exception($"User with Id: {userId} not found");
+            User user = await _userDbService.GetUserByIdAsync(userId) ?? throw new Exception($"User with Id: {userId} not found");
 
             return user;
-        }
-
-        public async Task CheckChatForUser(int userId, int chatId)
-        {
-            await _userCheckChat.CheckChatInUser(userId, chatId);
         }
     }
 }

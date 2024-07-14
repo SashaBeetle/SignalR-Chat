@@ -17,6 +17,7 @@ namespace SignalRChat_backend.Data
         {
             services.AddScoped(typeof(IDbEntityService<>), typeof(DbEntityService<>));
             services.AddScoped<IChatDbService, ChatDbService>();
+            services.AddScoped<IUserDbService, UserDbService>();
         }
         public static void RegisterDataDependencies(this IServiceCollection services, IConfigurationRoot configuration)
         {
