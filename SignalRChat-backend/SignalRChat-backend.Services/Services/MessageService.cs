@@ -2,6 +2,7 @@
 using SignalRChat_backend.Data.Entities;
 using SignalRChat_backend.Data.Interfaces;
 using SignalRChat_backend.Services.Interfaces;
+using System.Xml.Linq;
 
 
 namespace SignalRChat_backend.Services.Services
@@ -16,35 +17,49 @@ namespace SignalRChat_backend.Services.Services
 
         public async Task<Message> CreateMessageAsync(string text, int userId, int chatId)
         {
-            Message message = new Message
+            try
             {
-                Text = text,
-                UserId = userId,
-                ChatId = chatId
-            };
+                Message message = new Message
+                {
+                    Text = text,
+                    UserId = userId,
+                    ChatId = chatId
+                };
 
-            await _messageService.Create(message);
+                await _messageService.Create(message);
 
-            return message;
+                return message;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"Message cannot be create", ex);
+            }
         }
 
         public async Task DeleteMessageByIdAsync(int messageId)
         {
-            Message message = await _messageService.GetById(messageId) ?? throw new Exception($"Message with Id: {messageId} not found");
+            Message message = await _messageService.GetById(messageId) ?? throw new ServiceException($"Message with Id: {messageId} not found");
 
             await _messageService.Delete(message);
         }
 
         public async Task<IEnumerable<Message>> GetAllMessagesAsync()
         {
-            IList<Message> messages = await _messageService.GetAll().ToListAsync();
+            try
+            {
+                IList<Message> messages = await _messageService.GetAll().ToListAsync();
 
-            return messages;
+                return messages;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"No messages found: ", ex);
+            }     
         }
 
         public async Task<Message> GetMessageByIdAsync(int messageId)
         {
-            Message message = await _messageService.GetById(messageId) ?? throw new Exception($"Message with Id: {messageId} not found");
+            Message message = await _messageService.GetById(messageId) ?? throw new ServiceException($"Message with Id: {messageId} not found");
 
             return message;
         }

@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "CorsPolicy",
                       policy =>
                       {
-                          policy.WithOrigins("https://localhost:7013", "wss://localhost:7013/chat")
+                          policy.WithOrigins("https://localhost:7013")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();

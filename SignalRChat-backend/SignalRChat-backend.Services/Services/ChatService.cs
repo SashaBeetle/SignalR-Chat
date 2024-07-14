@@ -2,6 +2,8 @@
 using SignalRChat_backend.Data.Entities;
 using SignalRChat_backend.Data.Interfaces;
 using SignalRChat_backend.Services.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SignalRChat_backend.Services.Services
 {
@@ -17,56 +19,108 @@ namespace SignalRChat_backend.Services.Services
         }
         public async Task<Chat> CreateChatAsync(string name, int userId)
         {
-            Chat chat = new Chat
+            try
             {
-                Name = name,
-                CreatorId = userId
-            };
+                Chat chat = new Chat
+                {
+                    Name = name,
+                    CreatorId = userId
+                };
 
-            await _chatService.Create(chat);
+                await _chatService.Create(chat);
 
-            return chat;
+                return chat;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"Chat cannot be create", ex);
+            }
+            
         }
         public async Task DeleteChatByIdAsync(int chatId, int userId)
         {
-            Chat chat = await _chatService.GetById(chatId) ?? throw new Exception($"Chat with Id: {chatId} not found");
+            Chat chat = await _chatService.GetById(chatId) ?? throw new ServiceException($"Chat with Id: {chatId} not found");
 
             if (chat.CreatorId != userId)
-                throw new UserException($"There are no permissions to do the operation");
+                throw new ServiceException($"There are no permissions to do the operation");
 
             await _chatService.Delete(chat);
         }
         public async Task<IEnumerable<Chat>> GetAllChatsAsync()
         {
-            IList<Chat> chats = await _chatService.GetAll().ToListAsync();
+            try
+            {
+                IList<Chat> chats = await _chatService.GetAll().ToListAsync();
 
-            return chats;
+                return chats;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"No chats found: ", ex);
+            }
         }
         public async Task<Chat> GetChatByIdAsync(int chatId)
         {
-            Chat chat = await _chatDbService.GetChatByIdAsync(chatId) ?? throw new Exception($"Chat with Id: {chatId} not found");
+            try
+            {
+                Chat chat = await _chatDbService.GetChatByIdAsync(chatId);
 
-            return chat;
+                return chat;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"Chat not found: ", ex);
+            }
+            
         }
         public async Task<IEnumerable<Chat>> SearchChatsByNameAsync(string chatName)
         {
-            IEnumerable<Chat> chats = await _chatDbService.ChatSearchByNameAsync(chatName);
+            try
+            {
+                IEnumerable<Chat> chats = await _chatDbService.ChatSearchByNameAsync(chatName);
 
-            return chats;
+                return chats;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"No chats found: ", ex);
+            }
         }
         public async Task AddUserToChatAsync(int chatId, int userId,string connectionId)
         {
-            await _chatDbService.AddUserToChatAsync(chatId, userId, connectionId);
+            try
+            {
+                await _chatDbService.AddUserToChatAsync(chatId, userId, connectionId);
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"The operation has not been completed: ", ex);
+            }
         }
         public async Task RemoveUserFromChatAsync(int chatId, int userId, string connectionId)
         {
-            await _chatDbService.RemoveUserFromChatAsync(chatId, userId, connectionId);
+            try
+            {
+                await _chatDbService.RemoveUserFromChatAsync(chatId, userId, connectionId);
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"The operation has not been completed: ", ex);
+            }
         }
         public async Task<IEnumerable<UserChat>> RemoveUsersFromChatAsync(int chatId)
         {
-            IEnumerable<UserChat> chats = await _chatDbService.RemoveUsersFromChatAsync(chatId);
+            try
+            {
+                IEnumerable<UserChat> chats = await _chatDbService.RemoveUsersFromChatAsync(chatId);
 
-            return chats;
+                return chats;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceException($"The operation has not been completed: ", ex);
+            }
+            
         }
     }
 }
