@@ -36,24 +36,25 @@ namespace SignalRChat_backend.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateChat([FromBody] string name, int userId)
+        public async Task<IActionResult> CreateChat([FromBody] string name,[Required] int userId)
         {
             return Ok(_mapper.Map<ChatDTO>(await _chatService.CreateChatAsync(name, userId)));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteChat(int chatId, int userId)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteChat([Required]int chatId, [Required] int userId)
         {
+            IList<UserChatDTO> userChatDTOos = _mapper.Map<IList<UserChatDTO>>(await _chatService.RemoveUsersFromChatAsync(chatId));
+
             await _chatService.DeleteChatByIdAsync(chatId, userId);
 
-          //var connections = _hubContext.UserChats.Where(uc => uc.ChatId == chatId).ToList();
+            await _hubContext.Clients.Group(chatId.ToString()).SendAsync("Chat Closed");
 
-          //foreach (var connection in connections)
-          //{
-          //    await _hubContext.Groups.RemoveFromGroupAsync(connection.UserId, chatId.ToString());
-          //}
+            foreach (var userChatDTO in userChatDTOos)
+            {
+                await _hubContext.Groups.RemoveFromGroupAsync(userChatDTO.ConnectionId, chatId.ToString());
+            }
 
-            await _hubContext.Clients.Group(chatId.ToString()).SendAsync("ChatClosed");
             return NoContent();
         }
         [HttpGet]

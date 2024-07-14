@@ -21,18 +21,19 @@ namespace SignalRChat_backend.Data.Services
 
             return chats;
         }
-        public async Task AddUserToChatAsync(int chatId, int userId)
+        public async Task AddUserToChatAsync(int chatId, int userId, string connectionId)
         {
             UserChat userChat = new UserChat()
             {
                 ChatId = chatId,
-                UserId = userId
+                UserId = userId,
+                ConnectionId = connectionId
             };
 
             _dbContext.UsersChats.Add(userChat);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task RemoveUserFromChatAsync(int chatId, int userId)
+        public async Task RemoveUserFromChatAsync(int chatId, int userId, string connectionId)
         {
             UserChat userChat = await _dbContext.UsersChats
                                     .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ChatId == chatId);
@@ -40,11 +41,27 @@ namespace SignalRChat_backend.Data.Services
             _dbContext.UsersChats.Remove(userChat);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task RemoveUsersFromChatAsync(int chatId)
+        public async Task<IEnumerable<UserChat>> RemoveUsersFromChatAsync(int chatId)
         {
-            //Chat chat = await _dbContext.Chats
-            //                    .Include(i => i.UserChats)
-        }
+            IEnumerable<UserChat> Chats = await _dbContext.UsersChats
+                .Where(w => w.ChatId == chatId)
+                .ToListAsync();
 
+            foreach (UserChat chat in Chats) {
+                _dbContext.UsersChats.Remove(chat);
+            }
+            await _dbContext.SaveChangesAsync();
+
+            return Chats;
+        }
+        public async Task<Chat> GetChatByIdAsync(int chatId)
+        {
+            Chat chat = await _dbContext.Set<Chat>()
+                                        .Include(x => x.Messages)
+                                        .Include(i => i.UserChats).FirstOrDefaultAsync(f => f.Id == chatId)
+                                        ?? throw new Exception($"Chat with Id: {chatId} not found");
+
+            return chat;
+        }
     }
 }

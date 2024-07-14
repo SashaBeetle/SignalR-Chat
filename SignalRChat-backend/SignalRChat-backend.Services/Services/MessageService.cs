@@ -51,7 +51,7 @@ namespace SignalRChat_backend.Services.Services
                 .Include(x => x.User)
                 .Include(x => x.Chat)
                 .FirstOrDefaultAsync(x => x.Id == messageId)
-                ?? throw new Exception($"Chat with Id: {messageId} not found");
+                ?? throw new Exception($"Message with Id: {messageId} not found");
 
             return message;
         }

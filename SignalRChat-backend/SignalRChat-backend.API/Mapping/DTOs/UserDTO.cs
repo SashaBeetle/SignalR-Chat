@@ -6,6 +6,6 @@ namespace SignalRChat_backend.API.Mapping.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Chat>? Chats { get; set; } = default!;
+        public List<int> ChatIds { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using SignalRChat_backend.Data;
 namespace SignalRChat_backend.Data.Migrations
 {
     [DbContext(typeof(SignalRChatDbContext))]
-    [Migration("20240713204408_RelationUserChatManytoMany")]
+    [Migration("20240714083717_RelationUserChatManytoMany")]
     partial class RelationUserChatManytoMany
     {
         /// <inheritdoc />
@@ -95,6 +95,10 @@ namespace SignalRChat_backend.Data.Migrations
 
                     b.Property<int>("ChatId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "ChatId");
 

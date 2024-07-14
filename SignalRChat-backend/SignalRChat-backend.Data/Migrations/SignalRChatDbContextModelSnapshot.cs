@@ -93,6 +93,10 @@ namespace SignalRChat_backend.Data.Migrations
                     b.Property<int>("ChatId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("UserId", "ChatId");
 
                     b.HasIndex("ChatId");

@@ -44,7 +44,7 @@ namespace SignalRChat_backend.Services.Services
         }
         public async Task<Chat> GetChatByIdAsync(int chatId)
         {
-            Chat chat = await _chatService.GetById(chatId) ?? throw new Exception($"Chat with Id: {chatId} not found");
+            Chat chat = await _chatDbService.GetChatByIdAsync(chatId) ?? throw new Exception($"Chat with Id: {chatId} not found");
 
             return chat;
         }
@@ -54,14 +54,19 @@ namespace SignalRChat_backend.Services.Services
 
             return chats;
         }
-        public async Task AddUserToChatAsync(int chatId, int userId)
+        public async Task AddUserToChatAsync(int chatId, int userId,string connectionId)
         {
-            await _chatDbService.AddUserToChatAsync(chatId, userId);
+            await _chatDbService.AddUserToChatAsync(chatId, userId, connectionId);
         }
-        public async Task RemoveUserFromChatAsync(int chatId, int userId)
+        public async Task RemoveUserFromChatAsync(int chatId, int userId, string connectionId)
         {
-            await _chatDbService.RemoveUserFromChatAsync(chatId, userId);
+            await _chatDbService.RemoveUserFromChatAsync(chatId, userId, connectionId);
         }
+        public async Task<IEnumerable<UserChat>> RemoveUsersFromChatAsync(int chatId)
+        {
+            IEnumerable<UserChat> chats = await _chatDbService.RemoveUsersFromChatAsync(chatId);
 
+            return chats;
+        }
     }
 }

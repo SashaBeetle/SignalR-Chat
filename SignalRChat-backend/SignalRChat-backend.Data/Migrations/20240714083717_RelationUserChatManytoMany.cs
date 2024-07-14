@@ -33,7 +33,8 @@ namespace SignalRChat_backend.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    ChatId = table.Column<int>(type: "integer", nullable: false)
+                    ChatId = table.Column<int>(type: "integer", nullable: false),
+                    ConnectionId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -34,7 +34,7 @@ namespace SignalRChat_backend.API.Hubs
             _logger.LogInformation("Client joined: " + Context.ConnectionId);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
-            await _chatService.AddUserToChatAsync(chatId, userId);
+            await _chatService.AddUserToChatAsync(chatId, userId, Context.ConnectionId);
             await Clients.Group(chatId.ToString()).SendAsync("Client Joined:", Context.ConnectionId, chatId);
         }
         public async Task LeaveChat(int chatId, int userId)
@@ -42,7 +42,7 @@ namespace SignalRChat_backend.API.Hubs
             _logger.LogInformation("Client leaved: " + Context.ConnectionId);
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatId.ToString());
-            await _chatService.RemoveUserFromChatAsync(chatId, userId);
+            await _chatService.RemoveUserFromChatAsync(chatId, userId, Context.ConnectionId);
             await Clients.Group(chatId.ToString()).SendAsync("ChatLeaved:", Context.ConnectionId, chatId);
         }
         public async Task SendMessage(string message, int chatId)
