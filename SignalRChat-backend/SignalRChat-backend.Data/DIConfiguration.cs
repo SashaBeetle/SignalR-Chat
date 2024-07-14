@@ -11,11 +11,13 @@ namespace SignalRChat_backend.Data
         private static void RegisterDatabaseDependencies(this IServiceCollection services, IConfigurationRoot configuration)
         {
             services.AddDbContext<SignalRChatDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("TodoDatabase")));
+                options.UseNpgsql(configuration.GetConnectionString("SignalRChatDatabase")));
         }
         private static void RegisterServiceDependencies(this IServiceCollection services)
         {
             services.AddScoped(typeof(IDbEntityService<>), typeof(DbEntityService<>));
+            services.AddScoped<IChatDbService, ChatDbService>();
+            services.AddScoped<IUserDbService, UserDbService>();
         }
         public static void RegisterDataDependencies(this IServiceCollection services, IConfigurationRoot configuration)
         {

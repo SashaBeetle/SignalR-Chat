@@ -8,14 +8,27 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+	<PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
+	  <None Update="..\SignalRChat_backend\bin\$(Configuration)\$(TargetFramework)\testhost.deps.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SignalRChat-backend.API\SignalRChat-backend.API.csproj" />
+    <ProjectReference Include="..\SignalRChat-backend.Data\SignalRChat-backend.Data.csproj" />
+    <ProjectReference Include="..\SignalRChat-backend.Services\SignalRChat-backend.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

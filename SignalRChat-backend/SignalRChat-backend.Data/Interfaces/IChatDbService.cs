@@ -1,14 +1,11 @@
 ﻿using SignalRChat_backend.Data.Entities;
 
-namespace SignalRChat_backend.Services.Interfaces
+namespace SignalRChat_backend.Data.Interfaces
 {
-    public interface IChatService
+    public interface IChatDbService
     {
-        Task<Chat> CreateChatAsync(string name, int userId);
+        Task<IEnumerable<Chat>> ChatSearchByNameAsync(string chatName);
         Task<Chat> GetChatByIdAsync(int chatId);
-        Task<IEnumerable<Chat>> GetAllChatsAsync();
-        Task<IEnumerable<Chat>> SearchChatsByNameAsync(string chatName);
-        Task DeleteChatByIdAsync(int chatId, int userId);
         Task AddUserToChatAsync(int chatId, int userId, string connectionId);
         Task RemoveUserFromChatAsync(int chatId, int userId, string connectionId);
         Task<IEnumerable<UserChat>> RemoveUsersFromChatAsync(int chatId);
